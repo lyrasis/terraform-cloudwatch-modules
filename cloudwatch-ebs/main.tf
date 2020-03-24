@@ -3,7 +3,7 @@ locals {
 
   alarm_bytes_from_percent = {
     for disk in keys(local.disks):
-    disk => (100-var.percent_alarm_threshold) * local.disks[disk].volume_size / 100.0
+    disk => (100-var.percent_alarm_threshold) * local.disks[disk].volume.size / 100.0
   }
 
   percent = {
@@ -32,7 +32,7 @@ resource "aws_cloudwatch_metric_alarm" "io-credit" {
   threshold           = "10"
   unit                = "Percent"
   dimensions = {
-    VolumeId = each.value.volume_id
+    VolumeId = each.value.volume.id
   }
   alarm_actions = [var.sns_topic]
 }
@@ -50,11 +50,11 @@ resource "aws_cloudwatch_metric_alarm" "disk" {
   threshold           = var.percent_alarm_threshold
   unit                = "Percent"
   dimensions = {
-    InstanceId    = each.value.instance_id
-    ImageId       = each.value.instance_ami
-    InstanceType  = each.value.instance_type
+    InstanceId    = each.value.instance.id
+    ImageId       = each.value.instance.ami
+    InstanceType  = each.value.instance.instance_type
     fstype        = var.storage_fstype
-    path          = each.value.volume_path
+    path          = each.value.path
   }
   alarm_actions = [var.sns_topic]
 }
@@ -72,11 +72,11 @@ resource "aws_cloudwatch_metric_alarm" "disk_used_bytes" {
   threshold           = var.bytes_alarm_threshold * pow(2, 30) # convert GiB to B
   unit                = "Bytes"
   dimensions = {
-    InstanceId    = each.value.instance_id
-    ImageId       = each.value.instance_ami
-    InstanceType  = each.value.instance_type
+    InstanceId    = each.value.instance.id
+    ImageId       = each.value.instance.ami
+    InstanceType  = each.value.instance.instance_type
     fstype        = var.storage_fstype
-    path          = each.value.volume_path
+    path          = each.value.path
   }
   alarm_actions = [var.sns_topic]
 }

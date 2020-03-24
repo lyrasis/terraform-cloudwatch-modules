@@ -1,11 +1,15 @@
 variable "disks" {
   type = map(object({
-    instance_id = string
-    instance_type = string
-    instance_ami = string
-    volume_id = string
-    volume_size = string
-    volume_path = string
+    instance = object({
+      id = string
+      instance_type = string
+      ami = string
+    })
+    volume = object({
+      id = string
+      size = number
+    })
+    path = string
   }))
 }
 

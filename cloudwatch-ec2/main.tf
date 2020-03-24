@@ -87,18 +87,18 @@ resource "aws_cloudwatch_metric_alarm" "autorecover" {
 }
 
 module "storage" {
-  source      = "../cloudwatch-ebs"
-  sns_topic   = var.sns_topic
+  source = "../cloudwatch-ebs"
+  sns_topic = var.sns_topic
   name_prefix = var.name_prefix
-  disks       = {
+  disks = {
     for instance in keys(local.instances):
     instance => {
-      instance_id    = var.instances[instance].id
-      instance_type  = var.instances[instance].instance_type
-      instance_ami   = var.instances[instance].ami
-      volume_id      = var.instances[instance].root_block_device[0].volume_id
-      volume_size    = var.instances[instance].root_block_device[0].volume_size
-      volume_path    = "/"
+      instance = var.instances[instance]
+      volume = {
+        id = var.instances[instance].root_block_device[0].volume_id
+        size = var.instances[instance].root_block_device[0].volume_size
+      }
+      path = "/"
     }
   }
 }
