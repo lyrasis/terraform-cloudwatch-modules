@@ -24,3 +24,8 @@ variable "enable" {
   type = bool
   default = true
 }
+
+variable "alert_on_insufficient_data" {
+  type = bool
+  default = true
+}

@@ -27,6 +27,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu" {
     InstanceId = each.value.id
   }
   alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
 }
 
 resource "aws_cloudwatch_metric_alarm" "ram" {
@@ -47,6 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "ram" {
     InstanceType  = each.value.instance_type
   }
   alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
 }
 
 resource "aws_cloudwatch_metric_alarm" "credit" {
@@ -65,6 +67,7 @@ resource "aws_cloudwatch_metric_alarm" "credit" {
     InstanceId = var.instances[each.key].id
   }
   alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
 }
 
 # https://aws.amazon.com/blogs/aws/new-auto-recovery-for-amazon-ec2/
