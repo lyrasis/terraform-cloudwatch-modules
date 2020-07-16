@@ -35,6 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "io-credit" {
     VolumeId = each.value.volume.id
   }
   alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
 }
 
 resource "aws_cloudwatch_metric_alarm" "disk" {
@@ -57,6 +58,7 @@ resource "aws_cloudwatch_metric_alarm" "disk" {
     path          = each.value.path
   }
   alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
 }
 
 resource "aws_cloudwatch_metric_alarm" "disk_used_bytes" {
@@ -79,4 +81,5 @@ resource "aws_cloudwatch_metric_alarm" "disk_used_bytes" {
     path          = each.value.path
   }
   alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
 }

@@ -44,3 +44,8 @@ variable "bytes_alarm_threshold" {
   type = number
   default = 50
 }
+
+variable "alert_on_insufficient_data" {
+  type = bool
+  default = true
+}
