@@ -29,3 +29,8 @@ variable "alert_on_insufficient_data" {
   type = bool
   default = true
 }
+
+variable "cpu_alarm_threshold" {
+  type = number
+  default = 80
+}

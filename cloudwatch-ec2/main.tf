@@ -21,7 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu" {
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
   statistic           = "Average"
-  threshold           = "80"
+  threshold           = var.cpu_alarm_threshold
   unit                = "Percent"
   dimensions = {
     InstanceId = each.value.id
