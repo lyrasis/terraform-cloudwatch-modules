@@ -29,3 +29,18 @@ variable "alert_on_insufficient_data" {
   type = bool
   default = true
 }
+
+variable "cpu_alarm_threshold" {
+  type = number
+  default = 80
+}
+
+variable "evaluation_periods" {
+  type = number
+  default = 60
+}
+
+variable "datapoints_to_alarm" {
+  type = number
+  default = 45
+}
