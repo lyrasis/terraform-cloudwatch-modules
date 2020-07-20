@@ -16,8 +16,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu" {
   alarm_description   = "CPU Usage Alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "60"
-  evaluation_periods  = "60"
-  datapoints_to_alarm = "45"
+  evaluation_periods  = var.evaluation_periods
+  datapoints_to_alarm = var.datapoints_to_alarm
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
   statistic           = "Average"
