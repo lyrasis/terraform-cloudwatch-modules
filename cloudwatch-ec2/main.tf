@@ -8,6 +8,20 @@ locals {
       instance
       if substr(var.instances[instance].instance_type, 0, 1) == "t"
   ])
+
+  # All the t3 unlimited instances
+  t_unlimited_instances = toset([
+    for instance in local.t_instances:
+      instance
+      if var.instances[instance].credit_specification[0].cpu_credits == "unlimited"
+  ])
+
+  # All the standard t instances
+  t_standard_instances = toset([
+    for instance in local.t_instances:
+      instance
+      if var.instances[instance].credit_specification[0].cpu_credits == "standard"
+  ])
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu" {
@@ -52,7 +66,7 @@ resource "aws_cloudwatch_metric_alarm" "ram" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "credit" {
-  for_each            = local.t_instances
+  for_each            = local.t_standard_instances
   alarm_name          = "${var.name_prefix}-${each.key}-cpu-credit"
   alarm_description   = "CPU Credit Balance"
   comparison_operator = "LessThanOrEqualToThreshold"
@@ -63,6 +77,26 @@ resource "aws_cloudwatch_metric_alarm" "credit" {
   statistic           = "Average"
   threshold           = 0
   unit                = "Count"
+  dimensions = {
+    InstanceId = var.instances[each.key].id
+  }
+  alarm_actions = [var.sns_topic]
+  insufficient_data_actions = var.alert_on_insufficient_data ? [var.sns_topic] :  []
+}
+
+# https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances-monitoring-cpu-credits.html#burstable-performance-instances-cw-metrics
+resource "aws_cloudwatch_metric_alarm" "surplus-credit" {
+  for_each            = local.t_unlimited_instances
+  alarm_name          = "${var.name_prefix}-${each.key}-cpu-credit-charge"
+  alarm_description   = "CPU Credit Surplus Charge"
+  comparison_operator = "GreaterThanThreshold"
+  period              = "300"
+  evaluation_periods  = "1"
+  namespace           = "AWS/EC2"
+  metric_name         = "CPUSurplusCreditsCharged"
+  statistic           = "Average"
+  threshold           = var.credit_surplus_alarm_threshold
+  unit                = "Credits"
   dimensions = {
     InstanceId = var.instances[each.key].id
   }
