@@ -96,7 +96,7 @@ resource "aws_cloudwatch_metric_alarm" "surplus-credit" {
   metric_name         = "CPUSurplusCreditsCharged"
   statistic           = "Average"
   threshold           = var.credit_surplus_alarm_threshold
-  unit                = "Credits"
+  unit                = "Count"
   dimensions = {
     InstanceId = var.instances[each.key].id
   }
