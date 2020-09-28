@@ -5,6 +5,7 @@ variable "instances" {
     instance_type = string
     ami = string
     root_block_device = any
+    credit_specification = any
   }))
 }
 
@@ -43,4 +44,9 @@ variable "evaluation_periods" {
 variable "datapoints_to_alarm" {
   type = number
   default = 45
+}
+
+variable "credit_surplus_alarm_threshold" {
+  type = number
+  default = 0
 }
