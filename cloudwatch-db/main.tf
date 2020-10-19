@@ -1,6 +1,6 @@
 locals {
   name_parts = [var.name_prefix, var.name, var.name_suffix]
-  name = join("-", [for part in name_parts: part if part != "" && part != null])
+  name = join("-", [for part in local.name_parts: part if part != "" && part != null])
 }
 
 resource "aws_cloudwatch_metric_alarm" "db-cpu" {
