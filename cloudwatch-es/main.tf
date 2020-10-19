@@ -1,9 +1,14 @@
 # Alarm limits largely taken from here:
 # https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html
 
+locals {
+  name_parts = [var.name_prefix, var.name, var.name_suffix]
+  name = join("-", [for part in local.name_parts: part if part != "" && part != null])
+}
+
 resource "aws_cloudwatch_metric_alarm" "es-cpu" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-cpu"
+  alarm_name          = "${local.name}-cpu"
   alarm_description   = "CPU Usage Alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "900"
@@ -28,7 +33,7 @@ locals {
 
 resource "aws_cloudwatch_metric_alarm" "es-disk" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-disk"
+  alarm_name          = "${local.name}-disk"
   alarm_description   = "Disk Space Usage"
   comparison_operator = "LessThanOrEqualToThreshold"
   period              = "300"
@@ -47,7 +52,7 @@ resource "aws_cloudwatch_metric_alarm" "es-disk" {
 
 resource "aws_cloudwatch_metric_alarm" "es-ram" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-ram"
+  alarm_name          = "${local.name}-ram"
   alarm_description   = "RAM Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "300"
@@ -71,7 +76,7 @@ locals {
 
 resource "aws_cloudwatch_metric_alarm" "es-credit" {
   count               = local.is_t_instance && var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-cpu-credit"
+  alarm_name          = "${local.name}-cpu-credit"
   alarm_description   = "CPU Credit Balance"
   comparison_operator = "LessThanOrEqualToThreshold"
   period              = "600"
@@ -90,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "es-credit" {
 
 resource "aws_cloudwatch_metric_alarm" "es-status-red" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-status-red"
+  alarm_name          = "${local.name}-status-red"
   alarm_description   = "ClusterStatus Red"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "60"
@@ -109,7 +114,7 @@ resource "aws_cloudwatch_metric_alarm" "es-status-red" {
 
 resource "aws_cloudwatch_metric_alarm" "es-status-yellow" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-status-yellow"
+  alarm_name          = "${local.name}-status-yellow"
   alarm_description   = "ClusterStatus Yellow"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "60"
@@ -128,7 +133,7 @@ resource "aws_cloudwatch_metric_alarm" "es-status-yellow" {
 
 resource "aws_cloudwatch_metric_alarm" "es-writes-blocked" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-writes-blocked"
+  alarm_name          = "${local.name}-writes-blocked"
   alarm_description   = "Writes blocked"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "300"
@@ -147,7 +152,7 @@ resource "aws_cloudwatch_metric_alarm" "es-writes-blocked" {
 
 resource "aws_cloudwatch_metric_alarm" "es-snapshot-failure" {
   count               = var.enable ? 1 : 0
-  alarm_name          = "${var.name_prefix}-es-snapshot-failure"
+  alarm_name          = "${local.name}-snapshot-failure"
   alarm_description   = "Snapshot failure"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = "60"

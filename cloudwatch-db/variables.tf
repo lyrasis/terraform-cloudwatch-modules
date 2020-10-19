@@ -15,6 +15,16 @@ variable "name_prefix" {
   type = string
 }
 
+variable "name_suffix" {
+  type = string
+  default = null
+}
+
+variable "name" {
+  type = string
+  default = "db"
+}
+
 variable "enable" {
   type = bool
   default = true
