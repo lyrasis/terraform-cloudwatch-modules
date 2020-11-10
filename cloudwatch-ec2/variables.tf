@@ -31,22 +31,28 @@ variable "alert_on_insufficient_data" {
   default = true
 }
 
-variable "cpu_alarm_threshold" {
-  type = number
-  default = 80
+variable "cpu_usage" {
+  type = object({
+    threshold = number
+    period = number
+    datapoints = number
+  })
+  default = {
+    threshold = 80
+    period = 60
+    datapoints = 45
+  }
 }
 
-variable "evaluation_periods" {
-  type = number
-  default = 60
-}
-
-variable "datapoints_to_alarm" {
-  type = number
-  default = 45
-}
-
-variable "credit_surplus_alarm_threshold" {
-  type = number
-  default = 0
+variable "credit_surplus" {
+  type = object({
+    threshold = number
+    statistic = string
+    period = number
+  })
+  default = {
+    threshold = 0
+    statistic = "Average"
+    period = 300
+  }
 }
