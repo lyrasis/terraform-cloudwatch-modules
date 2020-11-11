@@ -32,27 +32,13 @@ variable "alert_on_insufficient_data" {
 }
 
 variable "cpu_usage" {
-  type = object({
-    threshold = number
-    period = number
-    datapoints = number
-  })
-  default = {
-    threshold = 80
-    period = 60
-    datapoints = 45
-  }
+  description = "A map of overrides for the cpu usage alarm"
+  type = map(string)
+  default = {}
 }
 
-variable "credit_surplus" {
-  type = object({
-    threshold = number
-    statistic = string
-    period = number
-  })
-  default = {
-    threshold = 0
-    statistic = "Average"
-    period = 300
-  }
+variable "credit_charge" {
+  description = "A map of overrides for the cpu credit surplus charge alarm"
+  type = map(string)
+  default = {}
 }
